@@ -71,8 +71,8 @@ public class Downloader {
 		  }
 	 
 	 public void Clean(String PathToClean) {
-			new File(PathToClean + "\\Launcher.txt").delete();
-			new File(PathToClean + "\\Launcher.md5").delete();
+			new File(PathToClean + Slash + "Launcher.txt").delete();
+			new File(PathToClean + Slash + "Launcher.md5").delete();
 			System.out.println("Directory cleaned up!");
 	 }
 	 
@@ -105,8 +105,8 @@ public class Downloader {
 			
 			MinePodAppData = AppDataPath + MinePod;
 			MinePodLaunch = new File(MinePodAppData + Slash + "Launcher.jar");
-			MinePodLibrariesZip = MinePodAppData + Slash + "\\Libraries.zip";
-			MinePodVersionsZip = MinePodAppData + Slash + "\\Versions.zip";
+			MinePodLibrariesZip = MinePodAppData + Slash + "Libraries.zip";
+			MinePodVersionsZip = MinePodAppData + Slash + "fVersions.zip";
 			
 			if(!new File(MinePodAppData).exists()) {
 				new File(MinePodAppData).mkdir();
