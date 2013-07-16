@@ -9,11 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
-
 public class Downloader {
 	 private FileOutputStream fos;
 	 private InputStream rbc;
@@ -28,7 +23,6 @@ public class Downloader {
 	 private GetMd5 GetMd5 = new GetMd5();
    	 private URLConnection urlConnection;
 	 private String AppDataPath;
-	 private String fileType;
 	 private String latestVersionLauncher;
 	 private String MinePod;
 	 private File MinePodLaunch;
@@ -73,36 +67,9 @@ public class Downloader {
 		    System.out.println("Downloading complete!");
 		  }
 	 
-	 public void UnZip(String fileInput, String folderOutput) {
-		   try {
-		         ZipFile zipFile = new ZipFile(fileInput);
-		         zipFile.extractAll(folderOutput);
-		    } catch (ZipException e) {
-		        e.printStackTrace();
-		    }
-	 }
-	 
-	 public void Zip(String folderInput, String fileOutput) {
-			try {
-				ZipFile zipFile = new ZipFile(fileOutput);
-				ZipParameters parameters = new ZipParameters();
-				parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-				parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-				zipFile.createZipFileFromFolder(folderInput, parameters, true, 10485760);
-			} catch (ZipException e) {
-				e.printStackTrace();
-			}
-	 }
-	 
 	 public void Clean() {
 			new File(AppDataPath + MinePod + "\\Launcher.txt").delete();
 			new File(AppDataPath + MinePod + "\\Launcher.md5").delete();
-			new File(AppDataPath + MinePod + "\\Libraries.txt").delete();
-			new File(AppDataPath + MinePod + "\\Libraries.zip").delete();
-			new File(AppDataPath + MinePod + "\\Libraries.md5").delete();
-			new File(AppDataPath + MinePod + "\\Versions.txt").delete();
-			new File(AppDataPath + MinePod + "\\Versions.zip").delete();
-			new File(AppDataPath + MinePod + "\\Versions.md5").delete();
 			System.out.println("Directory cleaned up!");
 	 }
 	 
@@ -149,33 +116,6 @@ public class Downloader {
 			if(!GetMd5.VerifyMd5(new File(AppDataPath + MinePod + "\\Launcher.md5"), MinePodLaunch)) {
 				MinePodLaunch.delete();
 				Downloader(new URL(latestVersionLauncher), new FileOutputStream(MinePodLaunch));
-			}
-			
-			Downloader(new URL("http://assets.minepod.fr/launcher/versions/libraries.txt"), new FileOutputStream(AppDataPath + MinePod + "\\Libraries.txt"));
-			latestVersionLibraries = ReadFile.ReadFile(AppDataPath + MinePod + "\\Libraries.txt", StandardCharsets.UTF_8);
-
-			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + latestVersionLibraries), new FileOutputStream(AppDataPath + MinePod + "\\Libraries.md5"));
-			Zip(AppDataPath + MinePod + "\\Libraries", MinePodLibrariesZip);
-
-			if(!GetMd5.VerifyMd5(new File(AppDataPath + MinePod + "\\Libraries.md5"), new File(MinePodLibrariesZip))) {
-				new File(MinePodLibrariesZip).delete();
-				new File(AppDataPath + MinePod + "\\Libraries").delete();
-				Downloader(new URL(latestVersionLibraries), new FileOutputStream(MinePodLibrariesZip));
-				UnZip(MinePodLibrariesZip, AppDataPath + MinePod + "\\Libraries");
-			}
-			
-			
-			Downloader(new URL("http://assets.minepod.fr/launcher/versions/versions.txt"), new FileOutputStream(AppDataPath + MinePod + "\\Versions.txt"));
-			latestVersionVersions = ReadFile.ReadFile(AppDataPath + MinePod + "\\Versions.txt", StandardCharsets.UTF_8);
-
-			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + latestVersionVersions), new FileOutputStream(AppDataPath + MinePod + "\\Versions.md5"));
-			Zip(AppDataPath + MinePod + "\\Versions", MinePodVersionsZip);
-
-			if(!GetMd5.VerifyMd5(new File(AppDataPath + MinePod + "\\Versions.md5"), new File(MinePodVersionsZip))) {
-				new File(MinePodVersionsZip).delete();
-				new File(AppDataPath + MinePod + "\\Versions").delete();
-				Downloader(new URL(latestVersionVersions), new FileOutputStream(MinePodVersionsZip));
-				UnZip(MinePodVersionsZip, AppDataPath + MinePod + "\\Versions");
 			}
 			
 			
