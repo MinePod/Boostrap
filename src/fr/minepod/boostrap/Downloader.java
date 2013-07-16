@@ -30,6 +30,8 @@ public class Downloader {
 	 private String MinePodLibrariesZip;
 	 private String latestVersionVersions;
 	 private String MinePodVersionsZip;
+	private String Minecraft;
+	private String MinePodAppData;
 	 
 	 private void Downloader(URL website, FileOutputStream fos) {
 		    System.out.println("Starting...");
@@ -78,40 +80,48 @@ public class Downloader {
 			String OS = System.getProperty("os.name").toUpperCase();
 			if(OS.contains("WIN")) {
 				AppDataPath = System.getenv("APPDATA");
+				MinePod = "\\.MinePod";
+				Minecraft = "\\.minecraft";
 			} else if(OS.contains("MAC")) {
 				AppDataPath = System.getProperty("user.home") + "/Library/Application " + "Support";
+				MinePod = "\\MinePod";
+				Minecraft = "\\minecraft";
 			} else if(OS.contains("NUX")) {
 			    AppDataPath = System.getProperty("user.home");
+				MinePod = "\\.MinePod";
+				Minecraft = "\\.minecraft";
 			} else {
 				AppDataPath =  System.getProperty("user.dir");
+				MinePod = "\\.MinePod";
+				Minecraft = "\\.minecraft";
 			}
 			
 			System.out.println(AppDataPath);
 			
-			MinePod = "\\.MinePod";
-			MinePodLaunch = new File(AppDataPath + MinePod + "\\Launcher.jar");
-			MinePodLibrariesZip = AppDataPath + MinePod + "\\Libraries.zip";
-			MinePodVersionsZip = AppDataPath + MinePod + "\\Versions.zip";
+			MinePodAppData = AppDataPath + MinePod;
+			MinePodLaunch = new File(MinePodAppData + "\\Launcher.jar");
+			MinePodLibrariesZip = MinePodAppData + "\\Libraries.zip";
+			MinePodVersionsZip = MinePodAppData + "\\Versions.zip";
 			
-			if(!new File(AppDataPath + MinePod).exists()) {
-				new File(AppDataPath + MinePod).mkdir();
+			if(!new File(MinePodAppData).exists()) {
+				new File(MinePodAppData).mkdir();
 			}
 			
-			if(!new File(AppDataPath + MinePod + "\\Libraries").exists()) {
-				new File(AppDataPath + MinePod + "\\Libraries").mkdir();
+			if(!new File(MinePodAppData + "\\Libraries").exists()) {
+				new File(MinePodAppData + "\\Libraries").mkdir();
 			}
 			
-			if(!new File(AppDataPath + MinePod + "\\Versions").exists()) {
-				new File(AppDataPath + MinePod + "\\Versions").mkdir();
+			if(!new File(MinePodAppData + "\\Versions").exists()) {
+				new File(MinePodAppData + "\\Versions").mkdir();
 			}
 			
-			Clean(AppDataPath + MinePod);
+			Clean(MinePodAppData);
 			
 			
-			Downloader(new URL("http://assets.minepod.fr/launcher/versions/launcher.txt"), new FileOutputStream(AppDataPath + MinePod + "\\Launcher.txt"));
-			latestVersionLauncher = ReadFile.ReadFile(AppDataPath + MinePod + "\\Launcher.txt", StandardCharsets.UTF_8);
+			Downloader(new URL("http://assets.minepod.fr/launcher/versions/launcher.txt"), new FileOutputStream(MinePodAppData + "\\Launcher.txt"));
+			latestVersionLauncher = ReadFile.ReadFile(MinePodAppData + "\\Launcher.txt", StandardCharsets.UTF_8);
 			
-			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + latestVersionLauncher), new FileOutputStream(AppDataPath + MinePod + "\\Launcher.md5"));
+			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + latestVersionLauncher), new FileOutputStream(MinePodAppData + "\\Launcher.md5"));
 			
 			if(!GetMd5.VerifyMd5(new File(AppDataPath + MinePod + "\\Launcher.md5"), MinePodLaunch)) {
 				MinePodLaunch.delete();
