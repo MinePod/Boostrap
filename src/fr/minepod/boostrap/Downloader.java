@@ -67,9 +67,9 @@ public class Downloader {
 		    System.out.println("Downloading complete!");
 		  }
 	 
-	 public void Clean() {
-			new File(AppDataPath + MinePod + "\\Launcher.txt").delete();
-			new File(AppDataPath + MinePod + "\\Launcher.md5").delete();
+	 public void Clean(String PathToClean) {
+			new File(PathToClean + "\\Launcher.txt").delete();
+			new File(PathToClean + "\\Launcher.md5").delete();
 			System.out.println("Directory cleaned up!");
 	 }
 	 
@@ -105,7 +105,7 @@ public class Downloader {
 				new File(AppDataPath + MinePod + "\\Versions").mkdir();
 			}
 			
-			Clean();
+			Clean(AppDataPath + MinePod);
 			
 			
 			Downloader(new URL("http://assets.minepod.fr/launcher/versions/launcher.txt"), new FileOutputStream(AppDataPath + MinePod + "\\Launcher.txt"));
@@ -119,10 +119,9 @@ public class Downloader {
 			}
 			
 			
-			new MPLoader().addURL(MinePodLaunch.toURI().toURL());
-
-			// This should work now!
-			Thread.currentThread().getContextClassLoader().getResourceAsStream("context.xml");
+			new MPLoader(MinePodLaunch.getAbsolutePath());
+			
+			System.exit(0);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
