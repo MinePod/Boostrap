@@ -23,16 +23,15 @@ public class Downloader {
 	 private GetMd5 GetMd5 = new GetMd5();
    	 private URLConnection urlConnection;
 	 private String AppDataPath;
-	 private String latestVersionLauncher;
-	 private String MinePod;
-	 private File MinePodLaunch;
-	 private String latestVersionLibraries;
-	 private String MinePodLibrariesZip;
-	 private String latestVersionVersions;
-	 private String MinePodVersionsZip;
+	 private File LauncherFile;
+	 private String LauncherLocation;
 	 private String Minecraft;
-	 private String MinePodAppData;
 	 private String Slash;
+	 private File LauncherJar;
+	 
+	 private String LauncherLatestVersionUrl = "http://assets.minepod.fr/launcher/launcher.php";
+	 private String LauncherName = "MinePod";
+	 
 	 
 	 private void Downloader(URL website, FileOutputStream fos) {
 		    System.out.println("Starting...");
@@ -71,7 +70,6 @@ public class Downloader {
 		  }
 	 
 	 public void Clean(String PathToClean) {
-			new File(PathToClean + Slash + "Launcher.txt").delete();
 			new File(PathToClean + Slash + "Launcher.md5").delete();
 			System.out.println("Directory cleaned up!");
 	 }
@@ -81,60 +79,45 @@ public class Downloader {
 			String OS = System.getProperty("os.name").toUpperCase();
 			if(OS.contains("WIN")) {
 				AppDataPath = System.getenv("APPDATA");
-				MinePod = "\\.MinePod";
+				LauncherName = "\\." + LauncherName;
 				Minecraft = "\\.minecraft";
 				Slash = "\\";
 			} else if(OS.contains("MAC")) {
 				AppDataPath = System.getProperty("user.home") + "/Library/Application " + "Support";
-				MinePod = "/MinePod";
+				LauncherName = "/" + LauncherName;
 				Minecraft = "/minecraft";
 				Slash = "/";
 			} else if(OS.contains("NUX")) {
 			    AppDataPath = System.getProperty("user.home");
-				MinePod = "/.MinePod";
+			    LauncherName = "/." + LauncherName;
 				Minecraft = "/.minecraft";
 				Slash = "/";
 			} else {
 				AppDataPath =  System.getProperty("user.dir");
-				MinePod = "/.MinePod";
+				LauncherName = "/." + LauncherName;
 				Minecraft = "/.minecraft";
 				Slash = "/";
 			}
 			
 			System.out.println(AppDataPath);
 			
-			MinePodAppData = AppDataPath + MinePod;
-			MinePodLaunch = new File(MinePodAppData + Slash + "Launcher.jar");
-			MinePodLibrariesZip = MinePodAppData + Slash + "Libraries.zip";
-			MinePodVersionsZip = MinePodAppData + Slash + "fVersions.zip";
+			LauncherLocation = AppDataPath + LauncherName;
+			LauncherJar = new File(LauncherLocation + Slash + "Launcher.jar");
 			
-			if(!new File(MinePodAppData).exists()) {
-				new File(MinePodAppData).mkdir();
+			if(!new File(LauncherLocation).exists()) {
+				new File(LauncherLocation).mkdir();
 			}
 			
-			if(!new File(MinePodAppData + Slash + "Libraries").exists()) {
-				new File(MinePodAppData + Slash + "Libraries").mkdir();
-			}
-			
-			if(!new File(MinePodAppData + Slash + "Versions").exists()) {
-				new File(MinePodAppData + Slash + "Versions").mkdir();
-			}
-			
-			Clean(MinePodAppData);
+			Clean(LauncherLocation);
 			
 			
-			Downloader(new URL("http://assets.minepod.fr/launcher/versions/launcher.txt"), new FileOutputStream(MinePodAppData + Slash + "Launcher.txt"));
-			latestVersionLauncher = ReadFile.ReadFile(MinePodAppData + Slash + "Launcher.txt", StandardCharsets.UTF_8);
-			
-			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + latestVersionLauncher), new FileOutputStream(MinePodAppData + Slash + "Launcher.md5"));
-			
-			if(!GetMd5.VerifyMd5(new File(MinePodAppData + Slash + "Launcher.md5"), MinePodLaunch)) {
-				MinePodLaunch.delete();
-				Downloader(new URL(latestVersionLauncher), new FileOutputStream(MinePodLaunch));
+			if(!GetMd5.VerifyMd5(new File(LauncherLocation + Slash + "Launcher.md5"), LauncherJar)) {
+				LauncherJar.delete();
+				Downloader(new URL(LauncherLatestVersionUrl), new FileOutputStream(LauncherJar));
 			}
 			
 			
-			new MPLoader(MinePodLaunch.getAbsolutePath());
+			new JarLoader(LauncherJar.getAbsolutePath());
 			
 			System.exit(0);
 			
