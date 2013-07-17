@@ -110,6 +110,8 @@ public class Downloader {
 			
 			Clean(LauncherLocation);
 			
+			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
+			
 			
 			if(!GetMd5.VerifyMd5(new File(LauncherLocation + Slash + "Launcher.md5"), LauncherJar)) {
 				LauncherJar.delete();
