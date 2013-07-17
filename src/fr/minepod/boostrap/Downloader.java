@@ -30,6 +30,7 @@ public class Downloader {
 	 private File LauncherJar;
 	 
 	 private String LauncherLatestVersionUrl = "http://assets.minepod.fr/launcher/launcher.php";
+	 private String GetMd5FileUrl = "http://assets.minepod.fr/launcher/md5.php?file=";
 	 private String LauncherName = "MinePod";
 	 
 	 
@@ -110,7 +111,7 @@ public class Downloader {
 			
 			Clean(LauncherLocation);
 			
-			Downloader(new URL("http://assets.minepod.fr/launcher/md5.php?file=" + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
+			Downloader(new URL(GetMd5FileUrl + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
 			
 			
 			if(!GetMd5.VerifyMd5(new File(LauncherLocation + Slash + "Launcher.md5"), LauncherJar)) {
