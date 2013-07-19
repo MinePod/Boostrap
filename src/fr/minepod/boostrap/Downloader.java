@@ -19,7 +19,6 @@ public class Downloader {
 	 private int bytesRead;
 	 private int percent;
 	 private DisplayDownload DisplayDownload = new DisplayDownload();
-	 private ReadFile ReadFile = new ReadFile();
 	 private GetMd5 GetMd5 = new GetMd5();
    	 private URLConnection urlConnection;
 	 private String AppDataPath;
@@ -58,7 +57,7 @@ public class Downloader {
 		        this.totalBytesRead += this.bytesRead;
 		        this.percent = ((int)Math.round(this.totalBytesRead / fileLength * 100.0D));
 		        System.out.println("Bytes readed: " + (int)this.totalBytesRead + "/" + (int)fileLength + " " + this.percent + "%");
-		        this.DisplayDownload.Update(this.percent * 20);
+		        this.DisplayDownload.Update(this.percent);
 		      }
 
 		    } catch (MalformedURLException e) {
@@ -71,7 +70,7 @@ public class Downloader {
 		  }
 	 
 	 public void Clean(String PathToClean) {
-			new File(PathToClean + Slash + "Launcher.md5").delete();
+			new File(PathToClean + "Launcher.md5").delete();
 			System.out.println("Directory cleaned up!");
 	 }
 	 
@@ -109,7 +108,7 @@ public class Downloader {
 				new File(LauncherLocation).mkdir();
 			}
 			
-			Clean(LauncherLocation);
+			Clean(LauncherLocation + Slash);
 			
 			Downloader(new URL(GetMd5FileUrl + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
 			
