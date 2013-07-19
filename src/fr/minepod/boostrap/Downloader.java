@@ -7,7 +7,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
+
+import javax.swing.JOptionPane;
 
 public class Downloader {
 	 private FileOutputStream fos;
@@ -20,6 +21,7 @@ public class Downloader {
 	 private int percent;
 	 private DisplayDownload DisplayDownload = new DisplayDownload();
 	 private GetMd5 GetMd5 = new GetMd5();
+	 private JOptionPane JOptionPane = new JOptionPane();
    	 private URLConnection urlConnection;
 	 private String AppDataPath;
 	 private File LauncherFile;
@@ -62,8 +64,10 @@ public class Downloader {
 
 		    } catch (MalformedURLException e) {
 		      e.printStackTrace();
+		      JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 		    } catch (IOException e) {
 		      e.printStackTrace();
+		      JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 		    }
 
 		    System.out.println("Downloading complete!");
@@ -124,8 +128,10 @@ public class Downloader {
 			System.exit(0);
 			
 		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	 }
