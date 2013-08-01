@@ -11,9 +11,7 @@ import java.net.URLConnection;
 import javax.swing.JOptionPane;
 
 public class Downloader {
-	 private FileOutputStream fos;
 	 private InputStream rbc;
-	 private URL website;
 	 private byte[] buffer;
 	 private double fileLength = 0.0D;
 	 private double totalBytesRead = 0.0D;
@@ -21,7 +19,8 @@ public class Downloader {
 	 private int percent;
 	 private DisplayDownload DisplayDownload = new DisplayDownload();
 	 private GetMd5 GetMd5 = new GetMd5();
-	 private JOptionPane JOptionPane = new JOptionPane();
+	 private Config Config = new Config();
+	 private ClassFile ClassFile = new ClassFile();
    	 private URLConnection urlConnection;
 	 private String AppDataPath;
 	 private File LauncherFile;
@@ -30,12 +29,15 @@ public class Downloader {
 	 private String Slash;
 	 private File LauncherJar;
 	 
-	 private String LauncherLatestVersionUrl = "http://assets.minepod.fr/launcher/launcher.php";
-	 private String GetMd5FileUrl = "http://assets.minepod.fr/launcher/md5.php?file=";
-	 private String LauncherName = "MinePod";
+	 private String LauncherLatestVersionUrl = Config.LauncherLatestVersionUrl;
+	 private String BootstrapVersionUrl = Config.BootstrapVersionUrl;
+	 private String BootstrapNewVersionUrl = Config.BootstrapNewVersionUrl;
+	 private String GetMd5FileUrl = Config.GetMd5FileUrl;
+	 private String LauncherName = Config.LauncherName;
+	 private String BootstrapVersion = Config.BootstrapVersion;
 	 
 	 
-	 private void Downloader(URL website, FileOutputStream fos) {
+	 private void DownloadFiles(URL website, FileOutputStream fos) {
 		    System.out.println("Starting...");
 		    try {
 		      System.out.println("Getting url...");
@@ -64,10 +66,12 @@ public class Downloader {
 
 		    } catch (MalformedURLException e) {
 		      e.printStackTrace();
-		      JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
+		      javax.swing.JOptionPane.showMessageDialog(null, e.toString(), "Erreur", javax.swing.JOptionPane.ERROR_MESSAGE);
+		      System.exit(0);
 		    } catch (IOException e) {
 		      e.printStackTrace();
-		      JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
+		      javax.swing.JOptionPane.showMessageDialog(null, e.toString(), "Erreur", javax.swing.JOptionPane.ERROR_MESSAGE);
+		      System.exit(0);
 		    }
 
 		    System.out.println("Downloading complete!");
@@ -75,6 +79,7 @@ public class Downloader {
 	 
 	 public void Clean(String PathToClean) {
 			new File(PathToClean + "Launcher.md5").delete();
+			new File(PathToClean + "Boostrap.txt").delete();
 			System.out.println("Directory cleaned up!");
 	 }
 	 
@@ -114,12 +119,18 @@ public class Downloader {
 			
 			Clean(LauncherLocation + Slash);
 			
-			Downloader(new URL(GetMd5FileUrl + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
+			DownloadFiles(new URL(BootstrapVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Bootstrap.txt"));
 			
+			if(!ClassFile.ReadFile(LauncherLocation + Slash + "Bootstrap.txt").startsWith(BootstrapVersion)) {
+				JOptionPane.showMessageDialog(null, "Une nouvelle version est disponible: " + BootstrapNewVersionUrl, "Nouvelle version disponible", JOptionPane.WARNING_MESSAGE);
+				System.exit(0);
+			}
+			
+			DownloadFiles(new URL(GetMd5FileUrl + LauncherLatestVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Launcher.md5"));
 			
 			if(!GetMd5.VerifyMd5(new File(LauncherLocation + Slash + "Launcher.md5"), LauncherJar)) {
 				LauncherJar.delete();
-				Downloader(new URL(LauncherLatestVersionUrl), new FileOutputStream(LauncherJar));
+				DownloadFiles(new URL(LauncherLatestVersionUrl), new FileOutputStream(LauncherJar));
 			}
 			
 			
@@ -128,11 +139,13 @@ public class Downloader {
 			System.exit(0);
 			
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.toString(), "Erreur", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 	 }
 }
