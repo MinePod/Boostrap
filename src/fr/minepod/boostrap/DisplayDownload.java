@@ -9,14 +9,16 @@ import javax.swing.JTextArea;
 
 public class DisplayDownload extends JFrame
 {
-  private JProgressBar current = new JProgressBar(0, 100);
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private JProgressBar current = new JProgressBar(0, 100);
   JTextArea out;
   JButton find;
   Thread runner;
 
   public DisplayDownload() {
-    JFrame JFrame = new JFrame();
-
     JPanel pane = new JPanel();
     pane.setBackground(Color.WHITE);
     this.current.setValue(0);

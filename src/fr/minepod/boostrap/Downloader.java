@@ -20,12 +20,9 @@ public class Downloader {
 	 private DisplayDownload DisplayDownload = new DisplayDownload();
 	 private GetMd5 GetMd5 = new GetMd5();
 	 private Config Config = new Config();
-	 private ClassFile ClassFile = new ClassFile();
-   	 private URLConnection urlConnection;
+	 private URLConnection urlConnection;
 	 private String AppDataPath;
-	 private File LauncherFile;
 	 private String LauncherLocation;
-	 private String Minecraft;
 	 private String Slash;
 	 private File LauncherJar;
 	 
@@ -89,22 +86,18 @@ public class Downloader {
 			if(OS.contains("WIN")) {
 				AppDataPath = System.getenv("APPDATA");
 				LauncherName = "\\." + LauncherName;
-				Minecraft = "\\.minecraft";
 				Slash = "\\";
 			} else if(OS.contains("MAC")) {
 				AppDataPath = System.getProperty("user.home") + "/Library/Application " + "Support";
 				LauncherName = "/" + LauncherName;
-				Minecraft = "/minecraft";
 				Slash = "/";
 			} else if(OS.contains("NUX")) {
 			    AppDataPath = System.getProperty("user.home");
 			    LauncherName = "/." + LauncherName;
-				Minecraft = "/.minecraft";
 				Slash = "/";
 			} else {
 				AppDataPath =  System.getProperty("user.dir");
 				LauncherName = "/." + LauncherName;
-				Minecraft = "/.minecraft";
 				Slash = "/";
 			}
 			
@@ -121,7 +114,7 @@ public class Downloader {
 			
 			DownloadFiles(new URL(BootstrapVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Bootstrap.txt"));
 			
-			if(!ClassFile.ReadFile(LauncherLocation + Slash + "Bootstrap.txt").startsWith(BootstrapVersion)) {
+			if(!fr.minepod.boostrap.ClassFile.ReadFile(LauncherLocation + Slash + "Bootstrap.txt").startsWith(BootstrapVersion)) {
 				JOptionPane.showMessageDialog(null, "Une nouvelle version est disponible: " + BootstrapNewVersionUrl, "Nouvelle version disponible", JOptionPane.WARNING_MESSAGE);
 				System.exit(0);
 			}
