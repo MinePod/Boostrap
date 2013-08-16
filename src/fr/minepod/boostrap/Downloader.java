@@ -112,9 +112,9 @@ public class Downloader {
 			
 			Clean(LauncherLocation + Slash);
 			
-			DownloadFiles(new URL(BootstrapVersionUrl), new FileOutputStream(LauncherLocation + Slash + "Bootstrap.txt"));
+			DownloadFiles(new URL(BootstrapVersionUrl), new FileOutputStream(LauncherLocation + Slash + "bootstrap.txt"));
 			
-			if(!fr.minepod.boostrap.ClassFile.ReadFile(LauncherLocation + Slash + "Bootstrap.txt").startsWith(BootstrapVersion)) {
+			if(!fr.minepod.boostrap.ClassFile.ReadFile(LauncherLocation + Slash + "bootstrap.txt").startsWith(BootstrapVersion)) {
 				JOptionPane.showMessageDialog(null, "Une nouvelle version est disponible: " + BootstrapNewVersionUrl, "Nouvelle version disponible", JOptionPane.WARNING_MESSAGE);
 				System.exit(0);
 			}

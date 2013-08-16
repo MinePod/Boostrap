@@ -24,13 +24,13 @@ public class GetMd5
         if (this.lect.ready())
           tmp = tmp + this.lect.readLine();
       }
-      catch (NullPointerException a) {
-        System.out.println("Erreur : pointeur null");
-      } catch (IOException a) {
-        System.out.println("Probleme d'IO");
+      catch (NullPointerException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
 
-      System.out.println("Signature numerique lue: " + tmp);
+      System.out.println("Expected MD5: " + tmp);
       try
       {
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -39,15 +39,17 @@ public class GetMd5
         int nread = 0;
 
         while ((nread = this.fis.read(dataBytes)) != -1) {
-          md.update(dataBytes, 0, nread);
+        	md.update(dataBytes, 0, nread);
         }
 
         byte[] mdbytes = md.digest();
+
         String result = new String(Hex.encode(mdbytes));
 
+        System.out.println("Current MD5: " + result);
+        
         if (tmp.equals(result)) {
-          System.err.println("Verification MD5 = ok");
-          return true;
+        	return true;
         }
         return false;
       }
